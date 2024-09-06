@@ -1,6 +1,4 @@
-Here’s a `README.md` for your API project:
 
-```markdown
 # Multi-Tenant SaaS Authentication Backend
 
 This is a backend API built with Python and Flask for handling authentication, authorization, and organization management in a multi-tenant SaaS environment. The system allows user sign-up, sign-in, organization creation, member role assignment, and invite management with email notifications.
@@ -141,27 +139,92 @@ pip install -r requirements.txt
 4. **Set up environment variables** in `.env` file:
 
 ```
-FLASK_APP=app.py
-FLASK_ENV=development
+
 SECRET_KEY=your-secret-key
-JWT_SECRET_KEY=your-jwt-secret-key
-DATABASE_URL=mysql+pymysql://avnadmin:AVNS_7JH-2ruzIie96bkdhcs@mysql-279450c7-rajkisanssvrs-16fb.k.aivencloud.com:22461/defaultdb
-MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-email-password
+EMAIL_USER="apitestingformultitenant@gmail.com"
+EMAIL_PASSWORD="iwtk omvu tdio qbln"
 ```
 
 5. **Initialize the database**:
 
 ```bash
-flask db init
-flask db migrate
-flask db upgrade
+python -m delete
+python -m test
 ```
 
 6. **Run the application**:
 
 ```bash
 flask run --port=5001
+```
+
+
+The above code is a Flask API for a multi-tenant SaaS Auth service with features like user signup, sign-in, invite system, password reset, and stats gathering. Below are the key commands to run and test the API endpoints using `curl`:
+
+### 1. **Run the Server**
+To start the server, run the following command:
+```bash
+python app.py
+```
+
+### 2. **API Testing Commands**
+
+#### Sign Up
+```bash
+curl -X POST http://localhost:5001/signup -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password123", "organization_name": "MyOrg", "role": "admin"}'
+```
+
+#### Sign In
+```bash
+curl -X POST http://localhost:5001/signin -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password123"}'
+```
+
+#### Reset Password Request
+```bash
+curl -X POST http://localhost:5001/reset_password -H "Content-Type: application/json" -d '{"email": "user@example.com", "new_password": "newpassword123"}'
+```
+
+#### Invite Member
+```bash
+curl -X POST http://localhost:5001/invite_member -H "Content-Type: application/json" -d '{"user_id": "1", "org_id": "1"}'
+```
+
+#### Accept Invite
+```bash
+curl -X GET http://localhost:5001/accept_invite?token=invite_token
+```
+
+#### Delete User, Member, and Invites
+```bash
+curl -X DELETE http://localhost:5001/delete -H "Content-Type: application/json" -d '{"user_id": "2", "org_id": "1"}'
+```
+
+#### Update Member Role
+```bash
+curl -X POST http://localhost:5001/update_member_role -H "Content-Type: application/json" -d '{"user_id": "2", "org_id": "1", "new_role_name": "admin"}'
+```
+
+#### Role-Wise Users Stats
+```bash
+curl -X GET http://localhost:5001/role_wise_users
+```
+#### Organization Role User Stats
+```bash
+curl -X GET "http://localhost:5001/stats/organization-role-users"
+```
+
+#### Organization-Wise User Stats 
+```bash
+curl -X GET "http://localhost:5001/stats/organization-users"
+```
+#### Organization Role User Stats (with filters)
+```bash
+curl -X GET "http://localhost:5001/stats/organization-role-users?from_time=1693900800&to_time=1694000800&status=0"
+```
+
+#### Organization-Wise User Stats (with filters)
+```bash
+curl -X GET "http://localhost:5001/stats/organization-users?from_time=1693900800&to_time=1694000800&status=0"
 ```
 
 ## Scheduled Jobs
