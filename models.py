@@ -1,0 +1,50 @@
+from app import db
+import datetime
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
+    profile = db.Column(db.JSON, default={}, nullable=False)
+    status = db.Column(db.Integer, default=0, nullable=False)
+    settings = db.Column(db.JSON, default={}, nullable=True)
+    created_at = db.Column(db.BigInteger, default=datetime.datetime.utcnow().timestamp(), nullable=True)
+    updated_at = db.Column(db.BigInteger, default=datetime.datetime.utcnow().timestamp(), onupdate=datetime.datetime.utcnow().timestamp(), nullable=True)
+    invites = db.relationship('Invite', backref='user', lazy=True)
+    members = db.relationship('Member', backref='user', lazy=True)
+
+class Organization(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), unique=True, nullable=False)
+    status = db.Column(db.Integer, default=0, nullable=False)
+    personal = db.Column(db.Boolean, default=False, nullable=True)
+    settings = db.Column(db.JSON, default={}, nullable=True)
+    created_at = db.Column(db.BigInteger, default=datetime.datetime.utcnow().timestamp(), nullable=True)
+    updated_at = db.Column(db.BigInteger, default=datetime.datetime.utcnow().timestamp(), onupdate=datetime.datetime.utcnow().timestamp(), nullable=True)
+    roles = db.relationship('Role', backref='organization', lazy=True)
+    members = db.relationship('Member', backref='organization', lazy=True)
+    invites = db.relationship('Invite', backref='organization', lazy=True)
+
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.String(255), nullable=True)
+    org_id = db.Column(db.Integer, db.ForeignKey('organization.id', ondelete='CASCADE'), nullable=False)
+    members = db.relationship('Member', backref='role', lazy=True)
+
+class Member(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    org_id = db.Column(db.Integer, db.ForeignKey('organization.id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id', ondelete='CASCADE'), nullable=False)
+    status = db.Column(db.Integer, default=0, nullable=False)
+    settings = db.Column(db.JSON, default={}, nullable=True)
+    created_at = db.Column(db.BigInteger, default=datetime.datetime.utcnow().timestamp(), nullable=True)
+    updated_at = db.Column(db.BigInteger, default=datetime.datetime.utcnow().timestamp(), onupdate=datetime.datetime.utcnow().timestamp(), nullable=True)
+
+class Invite(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String(120), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    org_id = db.Column(db.Integer, db.ForeignKey('organization.id', ondelete='CASCADE'), nullable=False)
+    created_at = db.Column(db.BigInteger, default=datetime.datetime.utcnow().timestamp(), nullable=True)
