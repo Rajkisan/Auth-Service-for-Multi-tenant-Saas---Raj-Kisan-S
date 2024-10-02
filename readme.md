@@ -145,6 +145,8 @@ SECRET_KEY=your-secret-key
 EMAIL_USER="your email address"
 EMAIL_PASSWORD="your email app password"
 ```
+**How to get app password for your gmail address** 
+https://knowledge.workspace.google.com/kb/how-to-create-app-passwords-000009237
 
 5. **Initialize the database**:
 
