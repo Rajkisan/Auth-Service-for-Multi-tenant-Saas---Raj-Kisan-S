@@ -120,7 +120,7 @@ multi-tenant-saas-backend/
 1. **Clone the repository**:
 
 ```bash
-git clone https://github.com/username/multi-tenant-saas-backend.git
+git clone https://github.com/Rajkisan/multi-tenant-saas-backend.git
 cd multi-tenant-saas-backend
 ```
 
