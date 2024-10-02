@@ -56,6 +56,7 @@ This is a backend API built with Python and Flask for handling authentication, a
     - `id`: Unique identifier.
     - `name`: Organization name.
     - `status`: Organization status.
+    - `expire_minute` : Organization Email Invite Expiry Status.
     - `personal`: Boolean flag for personal organizations.
     - `settings`: JSON for organization settings.
     - `created_at`: Creation timestamp.
@@ -141,21 +142,22 @@ pip install -r requirements.txt
 ```
 
 SECRET_KEY=your-secret-key
-EMAIL_USER="apitestingformultitenant@gmail.com"
-EMAIL_PASSWORD="iwtk omvu tdio qbln"
+EMAIL_USER="your email address"
+EMAIL_PASSWORD="your email app password"
 ```
 
 5. **Initialize the database**:
 
 ```bash
-python -m delete
-python -m test
+flask db init
+flask db migrate
+flask db upgrade
 ```
 
 6. **Run the application**:
 
 ```bash
-flask run --port=5001
+flask run --host=0.0.0.0 --port=5001
 ```
 
 
@@ -164,7 +166,7 @@ The above code is a Flask API for a multi-tenant SaaS Auth service with features
 ### 1. **Run the Server**
 To start the server, run the following command:
 ```bash
-python app.py
+flask run --host=0.0.0.0 --port=5001
 ```
 
 ### 2. **API Testing Commands**
