@@ -1,6 +1,5 @@
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker
-import datetime
 
 # Database connection details
 DATABASE_URL = 'mysql+pymysql://avnadmin:AVNS_7JH-2ruzIie96bkdhcs@mysql-279450c7-rajkisanssvrs-16fb.k.aivencloud.com:22461/defaultdb'
@@ -10,18 +9,33 @@ engine = create_engine(DATABASE_URL, echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Define the time range
-from_time = 1325516000
-to_time = 1825517200
+# Reflect the database schema
+metadata = MetaData()
+metadata.reflect(bind=engine)
 
-# Execute the query
-query = text("SELECT id, created_at FROM user WHERE created_at BETWEEN :from_time AND :to_time")
-result = session.execute(query, {'from_time': from_time, 'to_time': to_time})
+# Function to display data from all tables
+def view_data():
+    for table in metadata.sorted_tables:
+        print(f"\nTable: {table.name}")
 
-# Fetch and print results
-for row in result:
-    user_id, created_at = row
-    print(f"User ID: {user_id}, Created At: {datetime.datetime.fromtimestamp(created_at)}")
+        # Fetch and print rows
+        query = session.execute(table.select())
+        rows = query.fetchall()
+        
+        # Check if rows are present
+        if rows:
+            columns = [column.name for column in table.columns]
+            print(f"Columns: {', '.join(columns)}")
+            
+            for row in rows:
+                # Create a dictionary for each row
+                row_dict = {columns[i]: row[i] for i in range(len(columns))}
+                print(row_dict)  # Print each row as a dictionary
+        else:
+            print("No rows found.")
+
+# Call the function to view data
+view_data()
 
 # Close the session
 session.close()

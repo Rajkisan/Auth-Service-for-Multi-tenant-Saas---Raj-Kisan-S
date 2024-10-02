@@ -39,10 +39,10 @@ deactivate nondestructive
 if [ "${OSTYPE:-}" = "cygwin" ] || [ "${OSTYPE:-}" = "msys" ] ; then
     # transform D:\path\to\venv to /d/path/to/venv on MSYS
     # and to /cygdrive/d/path/to/venv on Cygwin
-    export VIRTUAL_ENV=$(cygpath "/Users/rajki/Downloads/task 2/.venv")
+    export VIRTUAL_ENV=$(cygpath "/Users/rajki/Library/Mobile Documents/com~apple~CloudDocs/Auth-Service-for-Multi-tenant-Saas---Raj-Kisan-S/.venv")
 else
     # use the path as-is
-    export VIRTUAL_ENV="/Users/rajki/Downloads/task 2/.venv"
+    export VIRTUAL_ENV="/Users/rajki/Library/Mobile Documents/com~apple~CloudDocs/Auth-Service-for-Multi-tenant-Saas---Raj-Kisan-S/.venv"
 fi
 
 _OLD_VIRTUAL_PATH="$PATH"

@@ -1,5 +1,5 @@
 #!/bin/sh
-'''exec' "/Users/rajki/Downloads/task 2/.venv/bin/python3.12" "$0" "$@"
+'''exec' "/Users/rajki/Library/Mobile Documents/com~apple~CloudDocs/Auth-Service-for-Multi-tenant-Saas---Raj-Kisan-S/.venv/bin/python" "$0" "$@"
 ' '''
 # -*- coding: utf-8 -*-
 import re

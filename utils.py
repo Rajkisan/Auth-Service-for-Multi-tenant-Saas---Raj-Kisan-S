@@ -7,12 +7,14 @@ from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
+EMAIL_USER = os.getenv('EMAIL_USER')
+EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
 
 def send_email(to_email, subject, content):
     smtp_server = 'smtp.gmail.com'
     smtp_port = 587
-    from_email = os.getenv('EMAIL_USER')
-    from_password = os.getenv('EMAIL_PASSWORD')
+    from_email = EMAIL_USER
+    from_password = EMAIL_PASSWORD
 
     try:
         # Validate recipient email
