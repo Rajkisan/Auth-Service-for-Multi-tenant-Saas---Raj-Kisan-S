@@ -161,6 +161,16 @@ flask db upgrade
 ```bash
 flask run --host=0.0.0.0 --port=5001
 ```
+```bash
+celery -A tasks worker --loglevel=info
+```
+```bash
+celery -A celery_app beat --loglevel=info
+```
+If the above shows error.Try below.
+```bash
+PYTHONPATH=. celery -A celery_app beat --loglevel=info
+```
 
 
 The above code is a Flask API for a multi-tenant SaaS Auth service with features like user signup, sign-in, invite system, password reset, and stats gathering. Below are the key commands to run and test the API endpoints using `curl`:
