@@ -9,6 +9,7 @@ from email_validator import validate_email, EmailNotValidError
 from utils import send_email
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
+from tasks import send_queued_emails, queue_email
 # Initialize Flask application
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://avnadmin:AVNS_7JH-2ruzIie96bkdhcs@mysql-279450c7-rajkisanssvrs-16fb.k.aivencloud.com:22461/defaultdb'
@@ -51,7 +52,7 @@ def delete_expired_invites():
         except Exception as e:
             print(f"Error in deleting expired invites: {e}")
 
-scheduler.add_job(delete_expired_invites, 'interval', minutes=1)
+scheduler.add_job(delete_expired_invites, 'interval', minutes=10)
 scheduler.start()
 
 @app.route('/signup', methods=['POST'])
@@ -162,7 +163,7 @@ def signup():
         db.session.commit()
 
         # Send invite email
-        send_email(user.email, 'Welcome to our service!', 
+        queue_new_email(user.email, 'Welcome to our service!', 
                     f'You have been successfully signed up! Here is your invite link: {invite_link} (Invite expires in 10 minutes)')
 
         # Return response with user and organization information
@@ -314,7 +315,7 @@ def invite_member():
 
     # Send invite email
     user = User.query.get(data['user_id'])
-    send_email(user.email, 'You are invited to join an organization!', 'You have been invited to join an organization. Please use the following link to accept the invite:' + invite_link +" Invite expires in 10 Minutes")
+    queue_new_email(user.email, 'You are invited to join an organization!', 'You have been invited to join an organization. Please use the following link to accept the invite:' + invite_link +" Invite expires in 10 Minutes")
 
     return jsonify({'message': 'Invite mail sent successfully'})
 
@@ -590,7 +591,17 @@ def get_organization_user_stats():
         return jsonify({'message': str(e)}), 500
 
 
+def queue_new_email(to_email, subject, content):
+    # Add email to queue (you can change this to get data from request payload)
+    queue_email.delay(to_email, subject, content)
+    return jsonify({"message": "Email queued and will be sent in 1 minute."}), 200
 
+# Route to immediately send all queued emails
+@app.route('/send_queued_emails', methods=['GET'])
+def send_all_queued_emails():
+    # Call the task to immediately send all queued emails
+    result = send_queued_emails.apply_async()
+    return jsonify({"message": "All queued emails sent immediately.", "task_id": result.id}), 200
 
 if __name__ == '__main__':
 
